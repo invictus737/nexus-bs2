@@ -70,11 +70,11 @@ Nexus-BS 2.0. The runtime itself is not published here.
 | SDR | Status |
 |---|---|
 | SX1255 HATs: SXceiver, Z32IT SX1255 RPi HAT (with or without TQP3M9036 driver) | Field-tested, on the air daily |
-| µCell (SX1255) | Device profile ready, to be tested |
-| ADALM-Pluto (PlutoSDR) | Device profile ready, to be tested |
-| LimeSDR USB, LimeSDR Mini v2, LimeNET Micro | Device profile ready, to be tested |
-| Ettus USRP B200 / B210 | Device profile ready, to be tested |
-| Any other SoapySDR device | Generic profile, to be tested |
+| µCell (SX1255) | Field-tested |
+| ADALM-Pluto, Pluto+ | Testing soon: device profile ready, hardware on the bench |
+| LimeSDR USB, LimeSDR Mini v2, LimeNET Micro | Best effort: device profile, no hardware available to test |
+| Ettus USRP B200 / B210 | Best effort: device profile, no hardware available to test |
+| Any other SoapySDR device | Best effort: generic profile; reports welcome |
 
 - SDRs deliver a few mW. For real range add an external **linear** PA, a
   duplexer for the 7 MHz split and a low-pass filter.
