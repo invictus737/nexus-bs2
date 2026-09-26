@@ -32,8 +32,24 @@ off or restarted without interrupting the others.
 | **P25** | Reflector link, talkgroup auto-select and reflector list, NAC |
 | **FM** | 25 kHz channel with CTCSS, MMDVM FM repeater logic, svxlink (RoLink) or USRP bridge, MDC1200 |
 
-The station is operated from a browser dashboard, comes back on the air by
+The station is operated from a browser dashboard or from Nexus-BS Touch on a
+DSI touch screen, comes back on the air by
 itself after a power cut or a failed mode, and runs no service as root.
+
+## Nexus-BS Touch
+
+A station console on a DSI touch screen, right on the Pi. Validated on the
+4.3" 800×480 DSI panel; the layout reflows to 800×600, 1024×600 and 1024×768.
+No X, Wayland or browser: it draws straight to the framebuffer and costs about
+3 % of one core, niced away from the RF threads. Backlight, screensaver and
+wake behaviour are set in `[touch]` (see the configuration manual).
+
+| | |
+|---|---|
+| ![Modes](assets/touch-modes.png) | ![TETRA](assets/touch-tetra.png) |
+| ![Activity](assets/touch-activity.png) | ![Host](assets/touch-host.png) |
+
+<sub>Demo data: every callsign, name and ID is invented.</sub>
 
 ## This repository
 
