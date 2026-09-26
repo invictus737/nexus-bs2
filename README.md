@@ -5,7 +5,7 @@
 <h1 align="center">Nexus-BS 2.0</h1>
 
 <p align="center"><b>One SDR. Four radio systems. On the air together.</b><br>
-TETRA · DMR · P25 · analog FM, from a single SX1255 on a Raspberry Pi.</p>
+TETRA · DMR · P25 · analog FM, from a single SDR on a Raspberry Pi.</p>
 
 <p align="center">
   <a href="https://nexus-bs.pages.dev">Website</a> ·
@@ -21,7 +21,7 @@ TETRA · DMR · P25 · analog FM, from a single SX1255 on a Raspberry Pi.</p>
 ## What it is
 
 Nexus-BS 2.0 runs a TETRA base station, a DMR repeater, a P25 repeater and an
-analog FM repeater at the same time, from one SX1255 SDR. Each mode is its own
+analog FM repeater at the same time, from one SDR. Each mode is its own
 carrier on a 25 kHz grid around one local oscillator, and each can be turned on,
 off or restarted without interrupting the others.
 
@@ -49,8 +49,18 @@ Nexus-BS 2.0. The runtime itself is not published here.
 ## Hardware
 
 - Raspberry Pi 4 or 5.
-- An SX1255-based SDR HAT, such as the SXceiver or the Z32IT SX1255 RPi HAT.
-- The HAT delivers a few mW. For real range add an external **linear** PA, a
+- One full-duplex SDR:
+
+| SDR | Status |
+|---|---|
+| SX1255 HATs: SXceiver, Z32IT SX1255 RPi HAT (with or without TQP3M9036 driver) | Field-tested, on the air daily |
+| µCell (SX1255) | Device profile ready, to be tested |
+| ADALM-Pluto (PlutoSDR) | Device profile ready, to be tested |
+| LimeSDR USB, LimeSDR Mini v2, LimeNET Micro | Device profile ready, to be tested |
+| Ettus USRP B200 / B210 | Device profile ready, to be tested |
+| Any other SoapySDR device | Generic profile, to be tested |
+
+- SDRs deliver a few mW. For real range add an external **linear** PA, a
   duplexer for the 7 MHz split and a low-pass filter.
 
 ## Status

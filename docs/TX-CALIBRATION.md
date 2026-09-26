@@ -9,6 +9,10 @@ transmitter such as the SX1255 has two unavoidable artefacts:
 - **I/Q images**: a weak mirror of every carrier on the other side of the LO,
   at `2·LO − f`.
 
+PlutoSDR, LimeSDR and USRP boards usually calibrate LO leakage and I/Q balance
+inside the device; look at the spectrum anyway and use the fields below only if
+a spike or an image is visible. SX1255 boards need them.
+
 This page is the whole procedure: where to put the LO, how to cancel both
 artefacts from the dashboard, what to expect, and how to save the result.
 It takes about 30 minutes and needs no code and no scripts.
@@ -59,11 +63,13 @@ fails validation half-way, because two carriers briefly come closer than
 
 ## Step 2 — Leave the gains alone
 
-- **SX1255 `MIXER` and `DAC` gain at maximum** (`MIXER = 30`, `DAC = 9`). The
+- **On SX1255 boards: `MIXER` and `DAC` gain at maximum** (`MIXER = 30`, `DAC = 9`). The
   LO leakage does not shrink with the mixer gain, so lower gain only makes the
   carriers weaker *relative* to it.
+- **Other SDRs:** use the TX gain at which the spectrum stays clean, then treat
+  it like the SX1255 gains: fixed, and recalibrate if you change it.
 - **Keep the default `tx_peak` values** (TETRA 0.8, DMR 0.5, P25 0.7, FM 0.7).
-  Raising the digital level drives the SX1255 baseband into distortion: at 0.99
+  Raising the digital level drove the SX1255 baseband into distortion: at 0.99
   the images rose ~10 dB while the carriers rose only 2–6 dB.
 - Adjust output power with an external PA or attenuator, not by pushing the
   digital level.
