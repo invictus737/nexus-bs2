@@ -30,6 +30,14 @@ It takes about 30 minutes and needs no code and no scripts.
   `TX I/Q gain (dB)` and `TX I/Q phase (°)` are applied **live** when saved:
   no restart, the station stays on the air.
 
+## Step 0 — Start from a profile, if your board has one
+
+Dashboard **Settings → SDR → TX calibration profile** lists boards already
+measured on a spectrum analyzer (see [Calibration profiles](#calibration-profiles)).
+Choosing one writes its four values and the gains they were measured at, and
+applies them live. Then run steps 3–4 once with the smallest steps: every board
+differs a little. Editing any value by hand switches the profile to `custom`.
+
 ## Step 1 — Put the TX LO where it cannot hurt
 
 Rules (all offsets are multiples of 25 kHz and at least 50 kHz apart):
@@ -154,10 +162,73 @@ matters.
   tone, about 1 kHz wide. It widens with speech; if it stays narrow, check
   that the handheld is on a 25 kHz (wide) channel.
 
-## Community profiles
+## Calibration profiles
 
-| Board | MIXER / DAC | TX DC I | TX DC Q | I/Q gain (dB) | I/Q phase (°) | Result |
-|---|---|---|---|---|---|---|
-| Z32IT_sx3.0_amp (SX1255 HAT V3 + TQP3M9036) | 30 / 9 | 0.01901 | 0.01648 | −0.0305 | 0.3812 | LO −41 dBc, images ≤ −55 dBc |
+Measured with a Multicomp MP700022 (OWON) spectrum analyzer over SCPI: PosPeak
+detector, 100 averages, RBW 3 kHz unless noted. TX LO 438.2875 MHz during
+calibration (re-checked at 438.2625), carriers DMR 438.3125, TETRA 438.3625,
+P25 438.4125, FM 438.4625 MHz, 600 kS/s, SX1255 `DAC = 9`, `MIXER = 30`.
 
-Each board is different: use a profile as a starting point, then run steps 3–4.
+### Z32IT_sx3.0_amp
+
+SX1255 RPi4-5 HAT V3 (Z32IT) **with** the TQP3M9036 driver amplifier.
+
+| Setting | Value |
+|---|---|
+| `tx_profile` | `Z32IT_sx3.0_amp` |
+| `tx_dc_i` / `tx_dc_q` | 0.01901 / 0.01648 |
+| `tx_iq_gain_db` / `tx_iq_phase_deg` | −0.0305 / 0.3812 |
+| Gains | `DAC = 9`, `MIXER = 30` |
+
+| DC calibration | Before | After |
+|---|---|---|
+| LO spike, 50 kHz span, RBW 3 kHz | +0.1 dBm | −44.7 dBm (−45 dB) |
+| LO spike, 1 MHz span | −3.8 dBm (≈ 0 dBc) | −42.5 dBm (≈ −41 dBc) |
+| LO spike after moving the LO to 438.2625 | | −43.4 dBm (≈ −41 dBc), 50 kHz from DMR |
+
+| I/Q calibration | Before | After |
+|---|---|---|
+| TETRA image, power in ±10 kHz, RBW 300 Hz | −36.6 dBm | −43.8 dBm (1 dB over the noise, ≤ −55 dBc) |
+| TETRA image, 1 MHz span | −47.2 dBm | −56.3 dBm |
+| DMR image, 1 MHz span | −44.8 dBm | −51.8 dBm |
+
+| Output (zero span, RBW 30 kHz) | dBm | mW |
+|---|---|---|
+| TETRA channel | +1.8 | 1.5 |
+| DMR channel | −1.7 | 0.68 |
+| All four modes active (P25, FM calculated) | ≈ +6.8 | ≈ 4.8 |
+
+MIXER 30 → 20 lowered every carrier 2 dB per 2 dB step: the driver is linear at
+MIXER 30. Raising all `tx_peak` to 0.99 raised the images about 10 dB for
+2–6 dB more carrier (SX1255 baseband distortion), so the defaults stay.
+
+### Z32IT_sx3.0_noamp
+
+The same HAT with the TQP3M9036 driver **bypassed**; TX port straight to the
+analyzer (Att 26 dB).
+
+| Setting | Value |
+|---|---|
+| `tx_profile` | `Z32IT_sx3.0_noamp` |
+| `tx_dc_i` / `tx_dc_q` | 0.01896 / 0.00182 |
+| `tx_iq_gain_db` / `tx_iq_phase_deg` | 0 / 0 (not needed, see below) |
+| Gains | `DAC = 9`, `MIXER = 30` |
+
+| DC calibration | Before | After |
+|---|---|---|
+| LO spike, 50 kHz span, RBW 3 kHz | −35.5 dBm (≈ 0 dBc) | −75.5 dBm (−40 dB, ≈ −41 dBc, 4.5 dB over the analyzer floor) |
+
+| I/Q calibration | Result |
+|---|---|
+| TETRA image, power in ±10 kHz, RBW 300 Hz | −81.2 dBm against −83.6 dBm noise: 2.3 dB over the floor, ≤ −44 dBc |
+| Decision | Left at 0: nothing measurable to cancel at this output level |
+
+Carriers were about −34 dBm (peak in 3 kHz), so this board is a clean,
+low-level source; the ≈ −44 dBc noise next to the carriers is the same as with
+the driver, so it comes from the SX1255 signal itself.
+
+### Adding your board
+
+Measure it with steps 1–5, then send the board name, the four values, the gains
+and the before/after numbers. Each measured board becomes a profile in the
+dashboard.
